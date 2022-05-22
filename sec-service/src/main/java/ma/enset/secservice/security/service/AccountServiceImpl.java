@@ -1,10 +1,11 @@
-package ma.enset.secservice.security.security.service;
+package ma.enset.secservice.security.service;
 
 import lombok.AllArgsConstructor;
 import ma.enset.secservice.security.entities.AppRole;
 import ma.enset.secservice.security.entities.AppUser;
 import ma.enset.secservice.security.repositories.AppRoleRepository;
 import ma.enset.secservice.security.repositories.AppUserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,8 +17,11 @@ import java.util.List;
 public class AccountServiceImpl implements AccountService {
     private AppUserRepository appUserRepository;
     private AppRoleRepository appRoleRepository;
+    private PasswordEncoder passwordEncoder;
     @Override
     public AppUser addNewUser(AppUser appUser) {
+        String pw = appUser.getPassword();
+        appUser.setPassword(passwordEncoder.encode(pw));
         return appUserRepository.save(appUser);
     }
 

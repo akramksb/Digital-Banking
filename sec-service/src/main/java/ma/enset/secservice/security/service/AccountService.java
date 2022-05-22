@@ -1,4 +1,4 @@
-package ma.enset.secservice.security.security.service;
+package ma.enset.secservice.security.service;
 
 import ma.enset.secservice.security.entities.AppRole;
 import ma.enset.secservice.security.entities.AppUser;
