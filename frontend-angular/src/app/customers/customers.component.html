@@ -3,6 +3,17 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-body">
+                    <div *ngIf="searchFormGroup">
+                        <form [formGroup]="searchFormGroup" (ngSubmit)="handleSearchCustomers()">
+                            <div class="input-group">
+                                <label class="input-group-text">Keyword : </label>
+                                <input type="text" formControlName="keyword" class="form-control">
+                                <button class="btn btn-info">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                     <table class="table">
                         <thead>
                             <tr>
@@ -14,13 +25,17 @@
                               <td>{{c.id}}</td>
                               <td>{{c.name}}</td>
                               <td>{{c.email}}</td>
+                              <td>
+                                <button class="btn btn-danger" (click)="handleDeleteCustomer(c)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                              </td>
                           </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-
     </ng-container>
     <ng-template #failureOrLosding>
         <ng-container *ngIf="errorMessage; else loading">
