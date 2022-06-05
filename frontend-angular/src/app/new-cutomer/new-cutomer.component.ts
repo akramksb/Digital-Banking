@@ -8,7 +8,7 @@ import { CustomerService } from '../services/customer.service';
   templateUrl: './new-cutomer.component.html',
   styleUrls: ['./new-cutomer.component.css']
 })
-export class NewCutomerComponent implements OnInit {
+export class NewCustomerComponent implements OnInit {
   newCustomerFormGroup! : FormGroup;
   constructor(private fb : FormBuilder,
     private customerService : CustomerService,
