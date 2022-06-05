@@ -1,6 +1,9 @@
 package ma.enset.ebankingbackend;
 
+import ma.enset.ebankingbackend.dtos.BankAccountDTO;
+import ma.enset.ebankingbackend.dtos.CurrentBankAccountDTO;
 import ma.enset.ebankingbackend.dtos.CustomerDTO;
+import ma.enset.ebankingbackend.dtos.SavingBankAccountDTO;
 import ma.enset.ebankingbackend.entities.AccountOperation;
 import ma.enset.ebankingbackend.entities.CurrentAccount;
 import ma.enset.ebankingbackend.entities.Customer;
@@ -13,13 +16,20 @@ import ma.enset.ebankingbackend.exceptions.CustomerNotFoundException;
 import ma.enset.ebankingbackend.repositories.AccountOperationRepository;
 import ma.enset.ebankingbackend.repositories.BankAccountRepository;
 import ma.enset.ebankingbackend.repositories.CustomerRepository;
+import ma.enset.ebankingbackend.security.entities.AppRole;
+import ma.enset.ebankingbackend.security.entities.AppUser;
+import ma.enset.ebankingbackend.security.service.AccountService;
 import ma.enset.ebankingbackend.services.BankAccountService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -31,10 +41,27 @@ public class EBankingBackendApplication {
     }
 
     @Bean
+    PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     CommandLineRunner start(
-            BankAccountService bankAccountService
+            BankAccountService bankAccountService,
+            AccountService accountService
     ){
         return args -> {
+            // ***************************************
+            accountService.addNewRole(new AppRole(null, "USER"));
+            accountService.addNewRole(new AppRole(null, "ADMIN"));
+
+            accountService.addNewUser(new AppUser(null, "akram", "1234",new ArrayList<>()));
+            accountService.addNewUser(new AppUser(null, "tarik","1234",new ArrayList<>()));
+
+            accountService.addRoleToUser("tarik", "USER");
+            accountService.addRoleToUser("akram", "ADMIN");
+            accountService.addRoleToUser("akram", "USER");
+            // ***************************************
             Stream.of("Akram","Tarik","Zakaria","Saad").forEach(
                     name->{
                         CustomerDTO customerDTO = new CustomerDTO();

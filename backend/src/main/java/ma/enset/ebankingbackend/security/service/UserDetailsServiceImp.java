@@ -1,8 +1,8 @@
-package ma.enset.secservice.security.service;
+package ma.enset.ebankingbackend.security.service;
+
 
 import lombok.AllArgsConstructor;
-import ma.enset.secservice.security.entities.AppUser;
-import org.springframework.beans.factory.annotation.Autowired;
+import ma.enset.ebankingbackend.security.entities.AppUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -11,18 +11,20 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class UserDetailsServiceImpl implements UserDetailsService {
-    private AccountService accountService;
+public class UserDetailsServiceImp implements UserDetailsService {
+    AccountService accountService;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser appUser = accountService.loadUserByUsername(username);
-        Collection<GrantedAuthority> grantedAuthorities = appUser.getAppRoles().stream()
-                .map( r -> new SimpleGrantedAuthority(r.getRoleName())).collect(Collectors.toList());
-        return new User(appUser.getUsername(), appUser.getPassword(), grantedAuthorities);
+        Collection<GrantedAuthority> grantedAuthorityCollection = new ArrayList<>();
+        appUser.getAppRoles().forEach(appRole -> {
+            grantedAuthorityCollection.add(new SimpleGrantedAuthority(appRole.getRoleName()));
+        });
+        return new User(appUser.getUsername(),appUser.getPassword(),grantedAuthorityCollection);
     }
 }
