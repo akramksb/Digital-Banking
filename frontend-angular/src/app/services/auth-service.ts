@@ -19,19 +19,16 @@ import { UserModel } from '../model/user.model';
   providedIn: 'root',
 })
 export class AuthService {
-  endpoint: string = 'http://localhost:8085';
   headers = new HttpHeaders().set('Content-Type', 'application/json');
   currentUser :any;
 
   constructor(private http: HttpClient, public router: Router,public storageService:StorageService) {}
-  // Sign-up
+  
   signUp(user: UserModel): Observable<any> {
     let api = `${environment.backendHost}/register-user`;
     return this.http.post(api, user).pipe(catchError(this.handleError));
   }
 
-
-  // Sign-in
   login(username:string, password:string) {
     const body = {
       "username": username,
@@ -70,7 +67,6 @@ export class AuthService {
       this.router.navigate(['login']);
     }
   }
-  // UserModel profile
   getUserProfile(id: any): Observable<any> {
     let api = `${environment.backendHost}/auth/profile/${id}`;
     return this.http.get(api, { headers: this.headers }).pipe(
@@ -82,10 +78,8 @@ export class AuthService {
   }
 
   refreshToken(token: string) {
-    // let header = new HttpHeaders().set("Authorization", 'Bearer ' + token);
-    // let headers = new HttpHeaders({ 'Authorization': 'Bearer ' + token});
     let heade =  {headers: new  HttpHeaders({ 'Authorization': 'Bearer ' + token})};
-    // @ts-ignore
+    
     return this.http.post(environment.backendHost + '/auth/refreshToken',{ headers: this.headers },heade);
   }
   getRole(){
@@ -93,14 +87,11 @@ export class AuthService {
     return this.storageService.getUser().appRoles;
   }
 
-  // Error
   handleError(error: HttpErrorResponse) {
     let msg = '';
     if (error.error instanceof ErrorEvent) {
-      // client-side error
       msg = error.error.message;
     } else {
-      // server-side error
       msg = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
     return throwError(msg);

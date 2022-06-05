@@ -13,7 +13,6 @@ import java.util.Collection;
 @NoArgsConstructor
 public class AppUserWithoutPass {
     private Long id;
-    private String  username;
     private String email;
     private Collection<String> appRoles=new ArrayList<>();
 }
